@@ -1,0 +1,222 @@
+[
+  {
+    "feature": "pre_RR",
+    "importance": 0.06853691448458323
+  },
+  {
+    "feature": "RR_ratio",
+    "importance": 0.06572531306098778
+  },
+  {
+    "feature": "cA4_26",
+    "importance": 0.04858379998897625
+  },
+  {
+    "feature": "cD4_std",
+    "importance": 0.03504838491704451
+  },
+  {
+    "feature": "max",
+    "importance": 0.03349324821740333
+  },
+  {
+    "feature": "cA4_16",
+    "importance": 0.03279153794609811
+  },
+  {
+    "feature": "post_RR",
+    "importance": 0.03234352498755041
+  },
+  {
+    "feature": "cD4_energy",
+    "importance": 0.03177432241783864
+  },
+  {
+    "feature": "cD4_maxabs",
+    "importance": 0.031409205223170415
+  },
+  {
+    "feature": "min",
+    "importance": 0.031078044760863493
+  },
+  {
+    "feature": "median",
+    "importance": 0.030498072629531126
+  },
+  {
+    "feature": "cA4_14",
+    "importance": 0.029191534168878652
+  },
+  {
+    "feature": "skewness",
+    "importance": 0.024637635654856892
+  },
+  {
+    "feature": "zero_cross_rate",
+    "importance": 0.02433612177202464
+  },
+  {
+    "feature": "kurtosis",
+    "importance": 0.024144333135782303
+  },
+  {
+    "feature": "cA4_18",
+    "importance": 0.023339984794768693
+  },
+  {
+    "feature": "iqr",
+    "importance": 0.021496501303701118
+  },
+  {
+    "feature": "local_RR",
+    "importance": 0.020473947449301325
+  },
+  {
+    "feature": "cD1_std",
+    "importance": 0.020254327321638448
+  },
+  {
+    "feature": "cD1_energy",
+    "importance": 0.02007639473930829
+  },
+  {
+    "feature": "cA4_15",
+    "importance": 0.018198560475987186
+  },
+  {
+    "feature": "cA4_11",
+    "importance": 0.017987432649732866
+  },
+  {
+    "feature": "cA4_17",
+    "importance": 0.01791634248650846
+  },
+  {
+    "feature": "cA4_27",
+    "importance": 0.017167024208823246
+  },
+  {
+    "feature": "cD2_std",
+    "importance": 0.014734112421323753
+  },
+  {
+    "feature": "cD1_maxabs",
+    "importance": 0.01355573646585298
+  },
+  {
+    "feature": "cA4_8",
+    "importance": 0.01335929250224565
+  },
+  {
+    "feature": "cA4_19",
+    "importance": 0.013129441093541744
+  },
+  {
+    "feature": "cA4_20",
+    "importance": 0.012959335095816288
+  },
+  {
+    "feature": "cD2_energy",
+    "importance": 0.012637968062869216
+  },
+  {
+    "feature": "cA4_10",
+    "importance": 0.012521128763126917
+  },
+  {
+    "feature": "cA4_21",
+    "importance": 0.012432126234891509
+  },
+  {
+    "feature": "cD3_std",
+    "importance": 0.011575298237232046
+  },
+  {
+    "feature": "cA4_28",
+    "importance": 0.011086915609616775
+  },
+  {
+    "feature": "cA4_23",
+    "importance": 0.01050431451038993
+  },
+  {
+    "feature": "cD2_maxabs",
+    "importance": 0.010202603661845609
+  },
+  {
+    "feature": "cA4_7",
+    "importance": 0.00997482518777862
+  },
+  {
+    "feature": "cA4_13",
+    "importance": 0.00991472730234776
+  },
+  {
+    "feature": "cD3_energy",
+    "importance": 0.009843710168608131
+  },
+  {
+    "feature": "cA4_12",
+    "importance": 0.009690363798190193
+  },
+  {
+    "feature": "cA4_22",
+    "importance": 0.009221849917185122
+  },
+  {
+    "feature": "cA4_3",
+    "importance": 0.008862185033566103
+  },
+  {
+    "feature": "cD3_maxabs",
+    "importance": 0.008344819746764563
+  },
+  {
+    "feature": "cA4_2",
+    "importance": 0.007978198368231569
+  },
+  {
+    "feature": "cA4_1",
+    "importance": 0.007915149406390272
+  },
+  {
+    "feature": "cA4_0",
+    "importance": 0.007876945801650628
+  },
+  {
+    "feature": "cA4_9",
+    "importance": 0.007860952967956565
+  },
+  {
+    "feature": "cA4_5",
+    "importance": 0.007432267320023417
+  },
+  {
+    "feature": "cA4_4",
+    "importance": 0.006662031216774122
+  },
+  {
+    "feature": "cA4_6",
+    "importance": 0.006446553340071975
+  },
+  {
+    "feature": "cA4_24",
+    "importance": 0.006370989819944225
+  },
+  {
+    "feature": "cA4_25",
+    "importance": 0.00510640487067058
+  },
+  {
+    "feature": "mean",
+    "importance": 0.0008567297336778161
+  },
+  {
+    "feature": "energy",
+    "importance": 0.0003283142310368534
+  },
+  {
+    "feature": "std",
+    "importance": 0.00011220031501980303
+  }
+]
