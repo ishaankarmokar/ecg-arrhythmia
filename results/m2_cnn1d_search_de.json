@@ -1,0 +1,204 @@
+{
+  "optimizer": "de",
+  "agents": 5,
+  "iterations": 2,
+  "budget_evals": 15,
+  "search_epochs": 6,
+  "search_train_beats": 12715,
+  "best_config": {
+    "lr": 0.00124,
+    "filters": 16,
+    "kernel": 7,
+    "blocks": 2,
+    "dropout": 0.1,
+    "dense": 32
+  },
+  "best_val_macro_f1_nsvf": 0.4523538309025419,
+  "history_best_objective": [
+    0.5526321346705634,
+    0.5486620128073496,
+    0.5476461690974581
+  ],
+  "evaluations": [
+    {
+      "eval": 1,
+      "config": {
+        "lr": 0.00163,
+        "filters": 24,
+        "kernel": 15,
+        "blocks": 4,
+        "dropout": 0.1377,
+        "dense": 128
+      },
+      "objective": 0.5526321346705634
+    },
+    {
+      "eval": 2,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 5,
+        "blocks": 3,
+        "dropout": 0.2483,
+        "dense": 128
+      },
+      "objective": 0.5716196690986429
+    },
+    {
+      "eval": 3,
+      "config": {
+        "lr": 0.00114,
+        "filters": 48,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3218,
+        "dense": 32
+      },
+      "objective": 0.5621891587638496
+    },
+    {
+      "eval": 4,
+      "config": {
+        "lr": 0.00188,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.4883,
+        "dense": 128
+      },
+      "objective": 0.5817208324297615
+    },
+    {
+      "eval": 5,
+      "config": {
+        "lr": 0.00165,
+        "filters": 16,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.1617,
+        "dense": 128
+      },
+      "objective": 0.5730606741521889
+    },
+    {
+      "eval": 6,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.5,
+        "dense": 64
+      },
+      "objective": 0.5708702212799281
+    },
+    {
+      "eval": 7,
+      "config": {
+        "lr": 0.00128,
+        "filters": 24,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 32
+      },
+      "objective": 0.5486620128073496
+    },
+    {
+      "eval": 8,
+      "config": {
+        "lr": 0.00177,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.337,
+        "dense": 64
+      },
+      "objective": 0.5534549841569143
+    },
+    {
+      "eval": 9,
+      "config": {
+        "lr": 0.00116,
+        "filters": 32,
+        "kernel": 15,
+        "blocks": 3,
+        "dropout": 0.2665,
+        "dense": 32
+      },
+      "objective": 0.5619326094047121
+    },
+    {
+      "eval": 10,
+      "config": {
+        "lr": 0.00185,
+        "filters": 48,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.5,
+        "dense": 128
+      },
+      "objective": 0.5769131692864873
+    },
+    {
+      "eval": 11,
+      "config": {
+        "lr": 0.00124,
+        "filters": 16,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 32
+      },
+      "objective": 0.5476461690974581
+    },
+    {
+      "eval": 12,
+      "config": {
+        "lr": 0.00139,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.2261,
+        "dense": 32
+      },
+      "objective": 0.5577132821539192
+    },
+    {
+      "eval": 13,
+      "config": {
+        "lr": 0.00146,
+        "filters": 16,
+        "kernel": 5,
+        "blocks": 2,
+        "dropout": 0.337,
+        "dense": 32
+      },
+      "objective": 0.5502410969796392
+    },
+    {
+      "eval": 14,
+      "config": {
+        "lr": 0.00176,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 2,
+        "dropout": 0.325,
+        "dense": 128
+      },
+      "objective": 0.5636724634143032
+    },
+    {
+      "eval": 15,
+      "config": {
+        "lr": 0.00199,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.3559,
+        "dense": 128
+      },
+      "objective": 0.636037183950235
+    }
+  ]
+}

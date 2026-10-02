@@ -1,0 +1,204 @@
+{
+  "optimizer": "pso",
+  "agents": 5,
+  "iterations": 2,
+  "budget_evals": 15,
+  "search_epochs": 6,
+  "search_train_beats": 12715,
+  "best_config": {
+    "lr": 0.00163,
+    "filters": 24,
+    "kernel": 15,
+    "blocks": 4,
+    "dropout": 0.1377,
+    "dense": 128
+  },
+  "best_val_macro_f1_nsvf": 0.4473678653294366,
+  "history_best_objective": [
+    0.5526321346705634,
+    0.5526321346705634,
+    0.5526321346705634
+  ],
+  "evaluations": [
+    {
+      "eval": 1,
+      "config": {
+        "lr": 0.00163,
+        "filters": 24,
+        "kernel": 15,
+        "blocks": 4,
+        "dropout": 0.1377,
+        "dense": 128
+      },
+      "objective": 0.5526321346705634
+    },
+    {
+      "eval": 2,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 5,
+        "blocks": 3,
+        "dropout": 0.2483,
+        "dense": 128
+      },
+      "objective": 0.5716196690986429
+    },
+    {
+      "eval": 3,
+      "config": {
+        "lr": 0.00114,
+        "filters": 48,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3218,
+        "dense": 32
+      },
+      "objective": 0.5621891587638496
+    },
+    {
+      "eval": 4,
+      "config": {
+        "lr": 0.00188,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.4883,
+        "dense": 128
+      },
+      "objective": 0.5817208324297615
+    },
+    {
+      "eval": 5,
+      "config": {
+        "lr": 0.00165,
+        "filters": 16,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.1617,
+        "dense": 128
+      },
+      "objective": 0.5730606741521889
+    },
+    {
+      "eval": 6,
+      "config": {
+        "lr": 0.00215,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.1326,
+        "dense": 128
+      },
+      "objective": 0.645737763136228
+    },
+    {
+      "eval": 7,
+      "config": {
+        "lr": 0.00105,
+        "filters": 32,
+        "kernel": 5,
+        "blocks": 4,
+        "dropout": 0.1283,
+        "dense": 128
+      },
+      "objective": 0.5752215059525255
+    },
+    {
+      "eval": 8,
+      "config": {
+        "lr": 0.00165,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.2018,
+        "dense": 64
+      },
+      "objective": 0.5624407570779733
+    },
+    {
+      "eval": 9,
+      "config": {
+        "lr": 0.00227,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 2,
+        "dropout": 0.3756,
+        "dense": 128
+      },
+      "objective": 0.5566812407503401
+    },
+    {
+      "eval": 10,
+      "config": {
+        "lr": 0.00207,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.1,
+        "dense": 128
+      },
+      "objective": 0.6059495222240364
+    },
+    {
+      "eval": 11,
+      "config": {
+        "lr": 0.00145,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 4,
+        "dropout": 0.1301,
+        "dense": 128
+      },
+      "objective": 0.5673310274987513
+    },
+    {
+      "eval": 12,
+      "config": {
+        "lr": 0.00116,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 3,
+        "dropout": 0.1,
+        "dense": 128
+      },
+      "objective": 0.5781688198607478
+    },
+    {
+      "eval": 13,
+      "config": {
+        "lr": 0.00154,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 4,
+        "dropout": 0.2105,
+        "dense": 64
+      },
+      "objective": 0.5687881651695403
+    },
+    {
+      "eval": 14,
+      "config": {
+        "lr": 0.00221,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.2556,
+        "dense": 128
+      },
+      "objective": 0.6488190798270332
+    },
+    {
+      "eval": 15,
+      "config": {
+        "lr": 0.00195,
+        "filters": 32,
+        "kernel": 15,
+        "blocks": 3,
+        "dropout": 0.1377,
+        "dense": 128
+      },
+      "objective": 0.5614825593627487
+    }
+  ]
+}
