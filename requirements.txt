@@ -1,0 +1,12 @@
+# Tested with Python 3.12 on macOS (CPU) - versions are lower bounds
+wfdb>=4.1
+numpy>=1.24
+scipy>=1.10
+PyWavelets>=1.4
+scikit-learn>=1.3
+pandas>=2.0
+matplotlib>=3.7
+tensorflow>=2.15
+# notebooks
+jupyter
+nbconvert
