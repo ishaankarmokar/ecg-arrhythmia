@@ -1,0 +1,51 @@
+{
+  "tag": "m4_transformer",
+  "variant": "baseline+context+augment",
+  "config": {
+    "lr": 0.0005,
+    "d_model": 32,
+    "heads": 4,
+    "ff": 64,
+    "layers": 2,
+    "patch": 4,
+    "dropout": 0.1,
+    "dense": 64,
+    "input": "context",
+    "augment": true
+  },
+  "epochs": 12,
+  "cv_macro_f1_nsvf": 0.5173530564383864,
+  "offsets": [
+    0.0,
+    -0.75,
+    -1.75,
+    0.0,
+    0.0
+  ],
+  "cv_macro_f1_nsvf_calibrated_oof": 0.5656184901803195,
+  "ablation_log": [
+    {
+      "step": "baseline",
+      "cv_macro_f1_nsvf": 0.4487894527354326,
+      "kept": true
+    },
+    {
+      "step": "context",
+      "variant": "baseline+context",
+      "cv_macro_f1_nsvf": 0.4657119076893251,
+      "kept": true
+    },
+    {
+      "step": "augment",
+      "variant": "baseline+context+augment",
+      "cv_macro_f1_nsvf": 0.5173530564383864,
+      "kept": true
+    },
+    {
+      "step": "focal",
+      "variant": "baseline+context+augment+focal",
+      "cv_macro_f1_nsvf": 0.48462828278454,
+      "kept": false
+    }
+  ]
+}

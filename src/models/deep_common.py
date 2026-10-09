@@ -12,6 +12,16 @@ Every deep model gets exactly the same treatment:
                is kept; training stops after PATIENCE epochs without gain
   * seeds      config.SEEDS, each run fully deterministic on CPU
 DS2 (test) is scored once, after training, with the restored best weights.
+
+Final-phase additions (all off by default, so interim models rebuild exactly):
+  * cfg['input']   'beat' (1 s at 360 Hz) or 'context' (3 s at 120 Hz: the beat
+                   and its neighbours); both are 360 samples long
+  * cfg['augment'] training-only augmentation: amplitude scaling, Gaussian
+                   noise, baseline offset, +/-40 ms time shift
+  * cfg['loss']    'ce' (class-weighted cross-entropy) or 'focal' (the same
+                   weights times (1 - p)^2, which down-weights easy beats)
+  * train_fixed()  trains for a fixed number of epochs (chosen by grouped CV)
+                   and can score held-out sets after every epoch
 """
 import json
 import os
@@ -24,7 +34,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 
-from config import CLASSES, SEEDS
+from config import CLASSES, SEEDS, SMOKE
 from evaluate import aggregate, report, search_f1
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -39,7 +49,11 @@ MAX_CLASS_WEIGHT = 20.0
 
 def set_reproducible(seed):
     tf.keras.utils.set_random_seed(seed)          # python, numpy and tf seeds
-    tf.config.experimental.enable_op_determinism()
+    # Bit-exact determinism is guaranteed on CPU. On a GPU (Colab) some kernels
+    # have no deterministic version, so seeds are fixed but runs may differ in
+    # the last digits; results are reported as mean +/- std over seeds anyway.
+    if not tf.config.list_physical_devices('GPU'):
+        tf.config.experimental.enable_op_determinism()
 
 
 def limit_threads(n):
@@ -76,10 +90,60 @@ def class_weights(y):
     return w
 
 
-def compile_model(model, lr):
+def focal_loss(gamma=2.0):
+    """Sparse categorical focal loss (Lin et al., 2017). Class weights are still
+    applied through Keras' class_weight, so this only adds the (1 - p)^gamma
+    factor that shrinks the loss of beats the model already gets right."""
+    def loss(y_true, y_pred):
+        y_true = tf.cast(tf.reshape(y_true, [-1]), tf.int32)
+        p = tf.clip_by_value(tf.gather(y_pred, y_true, axis=1, batch_dims=1), 1e-7, 1.0)
+        return -tf.pow(1.0 - p, gamma) * tf.math.log(p)
+    return loss
+
+
+def compile_model(model, lr, loss='ce'):
     model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=lr, rho=0.9),
-                  loss='sparse_categorical_crossentropy')
+                  loss=focal_loss() if loss == 'focal' else 'sparse_categorical_crossentropy')
     return model
+
+
+class BeatAugment(tf.keras.layers.Layer):
+    """Random, label-preserving changes applied only while training (Keras
+    passes training=False at prediction time, so evaluation is untouched).
+    Inputs are z-scored, so noise and offset are in units of one std."""
+
+    def __init__(self, max_shift=14, scale=0.1, noise=0.05, offset=0.1, **kw):
+        super().__init__(**kw)
+        self.max_shift, self.scale, self.noise, self.offset = max_shift, scale, noise, offset
+
+    def call(self, x, training=None):
+        if not training:
+            return x
+        b, n = tf.shape(x)[0], tf.shape(x)[1]
+        x = x * tf.random.uniform([b, 1, 1], 1 - self.scale, 1 + self.scale)
+        x = x + tf.random.uniform([b, 1, 1], -self.offset, self.offset)
+        x = x + tf.random.normal(tf.shape(x), stddev=self.noise)
+        if self.max_shift:
+            k = tf.random.uniform([b], -self.max_shift, self.max_shift + 1, dtype=tf.int32)
+            idx = tf.clip_by_value(tf.range(n)[None, :] - k[:, None], 0, n - 1)
+            x = tf.gather(x, idx, axis=1, batch_dims=1)
+        return x
+
+    def get_config(self):
+        return {**super().get_config(), 'max_shift': self.max_shift, 'scale': self.scale,
+                'noise': self.noise, 'offset': self.offset}
+
+
+def maybe_augment(x, cfg):
+    """Insert BeatAugment when cfg['augment'] is set. 40 ms of time shift is
+    14 samples at 360 Hz (beat input) or 5 samples at 120 Hz (context)."""
+    if not cfg.get('augment'):
+        return x
+    return BeatAugment(max_shift=5 if cfg.get('input') == 'context' else 14)(x)
+
+
+def predict_proba(model, X, F):
+    return model.predict([X[..., None], F], batch_size=1024, verbose=0)
 
 
 def predict(model, X, F):
@@ -162,6 +226,57 @@ def run_seeds(name, tag, build_fn, cfg, seeds=SEEDS):
         return None
     return aggregate(name, [read_json(p) for p in paths],
                      save_to=os.path.join(RESULTS, f'{tag}.json'))
+
+
+# --------------------------------------------------------------------------
+# Final phase: arrays for grouped CV on DS1 and fixed-epoch training
+# --------------------------------------------------------------------------
+def load_arrays(input_kind='beat'):
+    """All beats with record ids and split labels. RR features are returned
+    raw; callers standardise them on their own training rows only."""
+    d = np.load(os.path.join(ROOT, 'data', 'processed', 'beats.npz'))
+    if input_kind == 'context':
+        X = np.load(os.path.join(ROOT, 'data', 'processed', 'context.npz'))['Xc'].astype(np.float32)
+    else:
+        X = d['X'].astype(np.float32)
+    out = {'X': X, 'F': d['F'].astype(np.float32), 'y': d['y'].astype(np.int64),
+           'rec': d['rec'], 'split': d['split']}
+    return smoke_subset(out) if SMOKE else out
+
+
+def smoke_subset(data, keep_n=0.04):
+    """Smoke tests only: every non-N beat plus 4% of N beats."""
+    rng = np.random.default_rng(0)
+    keep = (data['y'] != 0) | (rng.random(len(data['y'])) < keep_n)
+    return {k: v[keep] for k, v in data.items()}
+
+
+def scaled_rr(F, train_idx, *other_idx):
+    scaler = StandardScaler().fit(F[train_idx])
+    return [scaler.transform(F[i]).astype(np.float32) for i in (train_idx, *other_idx)]
+
+
+def train_fixed(build_fn, cfg, X, F, y, epochs, seed, eval_sets=(), verbose=True):
+    """Train for exactly `epochs` epochs (no early stopping). After every epoch
+    the class probabilities of each (X, F) in eval_sets are stored, so the
+    caller can pick the best epoch across CV folds. Returns (model, probs)
+    where probs[k][e] are the probabilities of eval set k after epoch e+1."""
+    set_reproducible(seed)
+    model = build_fn(cfg)
+    probs = [[] for _ in eval_sets]
+
+    class _Collect(tf.keras.callbacks.Callback):
+        def on_epoch_end(self, epoch, logs=None):
+            for k, (Xe, Fe) in enumerate(eval_sets):
+                probs[k].append(predict_proba(self.model, Xe, Fe).astype(np.float32))
+            if verbose:
+                print(f'    epoch {epoch+1:2d}  loss {logs["loss"]:.4f}', flush=True)
+
+    model.fit([X[..., None], F], y, epochs=int(epochs),
+              batch_size=int(cfg.get('batch_size', BATCH_SIZE)),
+              class_weight=class_weights(y), callbacks=[_Collect()],
+              shuffle=True, verbose=0)
+    return model, probs
 
 
 def load_trained(build_fn, cfg, tag, seed):

@@ -12,7 +12,9 @@ their distance. Mean pooling over patches gives the beat representation,
 which is joined with the RR features before the classifier.
 
 Usage
-    python src/models/m4_transformer.py      # fixed config, trained with 3 seeds
+    python src/models/m4_transformer.py               # interim: fixed config, 3 seeds
+    python src/models/m4_transformer.py --mode cv     # final phase: grouped-CV ablations
+    python src/models/m4_transformer.py --mode final  # final phase: all of DS1, 3 seeds
 """
 import argparse
 import os
@@ -23,7 +25,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import tensorflow as tf
 
 from config import CLASSES, SEEDS, WINDOW
-from deep_common import compile_model, limit_threads, run_seeds
+from deep_common import compile_model, limit_threads, maybe_augment, run_seeds
 
 # Fixed in advance (the synopsis does not commit the Transformer to a search).
 CONFIG = {'lr': 5e-4, 'd_model': 32, 'heads': 4, 'ff': 64, 'layers': 2,
@@ -62,7 +64,8 @@ def build(cfg):
     beat = tf.keras.Input(shape=(WINDOW, 1), name='beat')
     rr = tf.keras.Input(shape=(4,), name='rr')
     patch, d = int(cfg['patch']), int(cfg['d_model'])
-    x = tf.keras.layers.Conv1D(d, 2 * patch + 1, strides=patch, padding='same')(beat)
+    x = maybe_augment(beat, cfg)
+    x = tf.keras.layers.Conv1D(d, 2 * patch + 1, strides=patch, padding='same')(x)
     x = PositionalEmbedding(WINDOW // patch, d)(x)
     for _ in range(int(cfg['layers'])):
         x = encoder_block(x, cfg)
@@ -72,17 +75,26 @@ def build(cfg):
     x = tf.keras.layers.Dense(int(cfg['dense']), activation='relu')(x)
     x = tf.keras.layers.Dropout(float(cfg['dropout']))(x)
     out = tf.keras.layers.Dense(len(CLASSES), activation='softmax')(x)
-    return compile_model(tf.keras.Model([beat, rr], out, name='transformer'), cfg['lr'])
+    return compile_model(tf.keras.Model([beat, rr], out, name='transformer'), cfg['lr'],
+                         cfg.get('loss', 'ce'))
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--threads', type=int, default=0)
+    ap.add_argument('--mode', choices=['interim', 'cv', 'final'], default='interim')
     ap.add_argument('--seeds', type=int, nargs='+', default=SEEDS,
                     help='train only these seeds (e.g. to run seeds in parallel)')
     args = ap.parse_args()
     limit_threads(args.threads)
-    run_seeds('M4 Transformer Encoder', 'm4_transformer', build, CONFIG, seeds=args.seeds)
+    if args.mode == 'cv':
+        from cv import deep_cv_select
+        deep_cv_select('m4_transformer', build, CONFIG)
+    elif args.mode == 'final':
+        from cv import run_final_deep
+        run_final_deep('M4 Transformer Encoder', 'm4_transformer', build, seeds=args.seeds)
+    else:
+        run_seeds('M4 Transformer Encoder', 'm4_transformer', build, CONFIG, seeds=args.seeds)
 
 
 if __name__ == '__main__':
