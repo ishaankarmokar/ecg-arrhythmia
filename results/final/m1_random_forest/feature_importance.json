@@ -1,0 +1,238 @@
+[
+  {
+    "feature": "pre_RR_rel",
+    "importance": 0.07630799331464434
+  },
+  {
+    "feature": "pre_RR",
+    "importance": 0.0537147340598225
+  },
+  {
+    "feature": "RR_ratio",
+    "importance": 0.04256571170364781
+  },
+  {
+    "feature": "cD4_std",
+    "importance": 0.04202463685256499
+  },
+  {
+    "feature": "RR_ratio_rel",
+    "importance": 0.041151395755122055
+  },
+  {
+    "feature": "cA4_26",
+    "importance": 0.03980181841715435
+  },
+  {
+    "feature": "cD4_energy",
+    "importance": 0.035447774205967696
+  },
+  {
+    "feature": "cD4_maxabs",
+    "importance": 0.03518354066075519
+  },
+  {
+    "feature": "min",
+    "importance": 0.028162434470602394
+  },
+  {
+    "feature": "cA4_14",
+    "importance": 0.02726252709907437
+  },
+  {
+    "feature": "zero_cross_rate",
+    "importance": 0.02579368218892128
+  },
+  {
+    "feature": "median",
+    "importance": 0.02236384789101375
+  },
+  {
+    "feature": "post_RR_rel",
+    "importance": 0.022104377290824834
+  },
+  {
+    "feature": "post_RR",
+    "importance": 0.0207372536798994
+  },
+  {
+    "feature": "max",
+    "importance": 0.02044529740576016
+  },
+  {
+    "feature": "cA4_27",
+    "importance": 0.019634168486310933
+  },
+  {
+    "feature": "kurtosis",
+    "importance": 0.018938459445338653
+  },
+  {
+    "feature": "skewness",
+    "importance": 0.018337154707473647
+  },
+  {
+    "feature": "local_RR",
+    "importance": 0.01833536127894812
+  },
+  {
+    "feature": "cA4_18",
+    "importance": 0.01796780769455042
+  },
+  {
+    "feature": "cA4_16",
+    "importance": 0.017638675052296285
+  },
+  {
+    "feature": "iqr",
+    "importance": 0.01753126184815663
+  },
+  {
+    "feature": "cA4_11",
+    "importance": 0.015709759916016554
+  },
+  {
+    "feature": "cA4_17",
+    "importance": 0.0156080548108913
+  },
+  {
+    "feature": "cA4_15",
+    "importance": 0.015038955051732701
+  },
+  {
+    "feature": "cA4_19",
+    "importance": 0.013483154955954693
+  },
+  {
+    "feature": "local_RR_rel",
+    "importance": 0.013037417949772737
+  },
+  {
+    "feature": "cD1_energy",
+    "importance": 0.012678411776702633
+  },
+  {
+    "feature": "cA4_28",
+    "importance": 0.012449381766198591
+  },
+  {
+    "feature": "cA4_21",
+    "importance": 0.011476455221345551
+  },
+  {
+    "feature": "cA4_20",
+    "importance": 0.011028443178362136
+  },
+  {
+    "feature": "cA4_8",
+    "importance": 0.011016066049256555
+  },
+  {
+    "feature": "cA4_12",
+    "importance": 0.01088766037558629
+  },
+  {
+    "feature": "cD1_std",
+    "importance": 0.01077269454952156
+  },
+  {
+    "feature": "cA4_0",
+    "importance": 0.010349398817679633
+  },
+  {
+    "feature": "cA4_10",
+    "importance": 0.010132247190260782
+  },
+  {
+    "feature": "cA4_1",
+    "importance": 0.009994253221315705
+  },
+  {
+    "feature": "cA4_3",
+    "importance": 0.009930926107468908
+  },
+  {
+    "feature": "cA4_23",
+    "importance": 0.009799627830121145
+  },
+  {
+    "feature": "cA4_9",
+    "importance": 0.00977255707218777
+  },
+  {
+    "feature": "cA4_7",
+    "importance": 0.009252072184550826
+  },
+  {
+    "feature": "cD2_energy",
+    "importance": 0.009140373072214596
+  },
+  {
+    "feature": "cA4_22",
+    "importance": 0.008600937537342099
+  },
+  {
+    "feature": "cA4_13",
+    "importance": 0.008555352237638989
+  },
+  {
+    "feature": "cD3_std",
+    "importance": 0.008527741046572787
+  },
+  {
+    "feature": "cA4_2",
+    "importance": 0.008359395548065281
+  },
+  {
+    "feature": "cD3_energy",
+    "importance": 0.008244339732122938
+  },
+  {
+    "feature": "cD2_maxabs",
+    "importance": 0.008204688843163608
+  },
+  {
+    "feature": "cA4_4",
+    "importance": 0.008117832005274038
+  },
+  {
+    "feature": "cD1_maxabs",
+    "importance": 0.008053327467019806
+  },
+  {
+    "feature": "cD2_std",
+    "importance": 0.00792087654566253
+  },
+  {
+    "feature": "cA4_5",
+    "importance": 0.007680713608293077
+  },
+  {
+    "feature": "cA4_6",
+    "importance": 0.00648369722970079
+  },
+  {
+    "feature": "cD3_maxabs",
+    "importance": 0.006411261595848733
+  },
+  {
+    "feature": "cA4_24",
+    "importance": 0.005389668891518031
+  },
+  {
+    "feature": "cA4_25",
+    "importance": 0.005121212328347041
+  },
+  {
+    "feature": "mean",
+    "importance": 0.0007380648350623667
+  },
+  {
+    "feature": "energy",
+    "importance": 0.0003988869910483823
+  },
+  {
+    "feature": "std",
+    "importance": 0.00018417895132915265
+  }
+]

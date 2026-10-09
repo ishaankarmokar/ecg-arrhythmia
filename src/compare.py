@@ -194,5 +194,181 @@ def main():
     print(f'figures written to {FIGS}')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and '--final' not in sys.argv:
     main()
+
+
+# ======================================================================
+# Final phase: interim vs final, per-record error analysis, figures
+# ======================================================================
+FINAL_MODELS = [('m1_random_forest', 'm1_random_forest', 'M1 Random Forest'),
+                ('m2_cnn1d', 'm2_cnn1d_tuned', 'M2 1D CNN'),
+                ('m3_bigru', 'm3_bigru', 'M3 BiGRU'),
+                ('m4_transformer', 'm4_transformer', 'M4 Transformer')]
+
+
+def _final_preds(tag, kind):
+    """Per-seed DS2 predictions of a final model ('raw' argmax or 'calibrated')."""
+    from calibrate import apply as apply_offsets
+    with open(os.path.join(RESULTS, 'final', tag, 'selected.json')) as fh:
+        offsets = json.load(fh)['offsets']
+    out = []
+    for s in (42, 43, 44):
+        p = np.load(os.path.join(RESULTS, 'final', 'runs', f'{tag}_seed{s}_probs_cpu.npz'))['p']
+        out.append(p.argmax(1) if kind == 'raw' else apply_offsets(p, offsets))
+    return out
+
+
+def per_record(kind='calibrated', min_beats=30):
+    """Recall of S and V per DS2 record (patient), mean over seeds."""
+    t = np.load(os.path.join(RESULTS, 'predictions', 'ds2_truth.npz'))
+    y, rec = t['y'].astype(int), t['rec']
+    preds = {tag: _final_preds(tag, kind) for tag, _, _ in FINAL_MODELS}
+    rows = []
+    for r in np.unique(rec):
+        m = rec == r
+        row = {'record': str(r), 'beats': int(m.sum())}
+        for c, ci in [('S', 1), ('V', 2)]:
+            mc = m & (y == ci)
+            row[f'n_{c}'] = int(mc.sum())
+            for tag, _, _ in FINAL_MODELS:
+                row[f'{tag}_{c}_recall'] = (float(np.mean([(q[mc] == ci).mean() for q in preds[tag]]))
+                                            if mc.sum() else None)
+        rows.append(row)
+    # S recall with and without the single dominant S record (232)
+    summary = {}
+    for tag, _, _ in FINAL_MODELS:
+        s_all = y == 1
+        s_wo = s_all & (rec != '232')
+        summary[tag] = {'S_recall_all': float(np.mean([(q[s_all] == 1).mean() for q in preds[tag]])),
+                        'S_recall_without_232': float(np.mean([(q[s_wo] == 1).mean() for q in preds[tag]])),
+                        'S_recall_232_only': float(np.mean([(q[rec == '232'][y[rec == '232'] == 1] == 1).mean()
+                                                            for q in preds[tag]]))}
+    out = {'kind': kind, 'records': rows, 'S_record_232_effect': summary}
+    with open(os.path.join(RESULTS, 'final', f'per_record_{kind}.json'), 'w') as fh:
+        json.dump(out, fh, indent=2)
+    shown = [r for r in rows if r['n_S'] >= min_beats or r['n_V'] >= min_beats]
+    return shown, summary
+
+
+def final_tables():
+    fin = {t: json.load(open(os.path.join(RESULTS, 'final', f'{t}.json'))) for t, _, _ in FINAL_MODELS}
+    itr = {t: json.load(open(os.path.join(RESULTS, f'{it}.json'))) for t, it, _ in FINAL_MODELS}
+    ci_f = json.load(open(os.path.join(RESULTS, 'final', 'bootstrap_ci_final.json')))['models']
+    ci_i = json.load(open(os.path.join(RESULTS, 'bootstrap_ci.json')))['models']
+    sel = {t: json.load(open(os.path.join(RESULTS, 'final', t, 'selected.json'))) for t, _, _ in FINAL_MODELS}
+    L = ['# Final-phase results on DS2', '',
+         'Final models: trained on all 22 DS1 patients with the configuration and epoch count chosen by '
+         '4-fold grouped cross-validation on DS1; calibration offsets fitted on the out-of-fold DS1 '
+         'predictions. DS2 scored once. Mean ± std over seeds 42/43/44; CI = patient-level bootstrap.', '',
+         '## Interim vs final (macro-F1 over 5 classes)', '',
+         '| Model | Interim | Interim 95% CI | Final raw | Final raw 95% CI | Final calibrated | Final cal. 95% CI |',
+         '|---|---|---|---|---|---|---|']
+    for t, it, lbl in FINAL_MODELS:
+        ci = ci_i[it]['macro_f1']['ci95']
+        fr, fc = ci_f[t]['raw']['macro_f1']['ci95'], ci_f[t]['calibrated']['macro_f1']['ci95']
+        L.append(f"| {lbl} | {pm(itr[t]['macro_f1'])} | [{ci[0]:.3f}, {ci[1]:.3f}] | "
+                 f"{pm(fin[t]['raw']['macro_f1'])} | [{fr[0]:.3f}, {fr[1]:.3f}] | "
+                 f"{pm(fin[t]['calibrated']['macro_f1'])} | [{fc[0]:.3f}, {fc[1]:.3f}] |")
+    for kind in ['raw', 'calibrated']:
+        L += ['', f'## Final {kind}: all metrics', '',
+              '| Model | Accuracy | Macro-F1 | Macro-F1 (N/S/V/F) | Rec. N | Rec. S | Rec. V | Rec. F | F1 S | F1 V |',
+              '|---|---|---|---|---|---|---|---|---|---|']
+        for t, _, lbl in FINAL_MODELS:
+            r = fin[t][kind]
+            L.append(f"| {lbl} | {pm(r['accuracy'])} | {pm(r['macro_f1'])} | {pm(r['macro_f1_nsvf'])} | "
+                     + ' | '.join(f"{r['per_class_recall'][c]['mean']:.2f}" for c in 'NSVF') + ' | '
+                     + ' | '.join(f"{r['per_class_f1'][c]['mean']:.2f}" for c in 'SV') + ' |')
+    L += ['', '## What grouped cross-validation chose (CV macro-F1 over N/S/V/F on DS1)', '',
+          '| Model | Steps tried (CV macro-F1, kept/rejected) | Selected | Epochs | Offsets (N,S,V,F,Q) |',
+          '|---|---|---|---|---|']
+    for t, _, lbl in FINAL_MODELS:
+        s = sel[t]
+        steps = '; '.join(f"{l['step']} {l['cv_macro_f1_nsvf']:.3f} ({'kept' if l['kept'] else 'rejected'})"
+                          for l in s['ablation_log'])
+        L.append(f"| {lbl} | {steps} | {s['variant']} | {s['epochs'] or '-'} | "
+                 f"{', '.join(f'{v:+.2f}' for v in s['offsets'])} |")
+    shown, summ = per_record('calibrated')
+    L += ['', '## Per-record recall (calibrated, DS2 records with at least 30 S or 30 V beats)', '',
+          '| Record | S beats | ' + ' | '.join(f'S rec. {l}' for _, _, l in FINAL_MODELS) + ' | V beats | '
+          + ' | '.join(f'V rec. {l}' for _, _, l in FINAL_MODELS) + ' |',
+          '|---|---|' + '---|' * 4 + '---|' + '---|' * 4]
+    fmt = lambda v: '-' if v is None else f'{v:.2f}'
+    for r in shown:
+        L.append(f"| {r['record']} | {r['n_S']} | " + ' | '.join(fmt(r[f'{t}_S_recall']) for t, _, _ in FINAL_MODELS)
+                 + f" | {r['n_V']} | " + ' | '.join(fmt(r[f'{t}_V_recall']) for t, _, _ in FINAL_MODELS) + ' |')
+    L += ['', '## Effect of record 232 on S recall (calibrated)', '',
+          '| Model | S recall, all DS2 | record 232 only | all other records |', '|---|---|---|---|']
+    for t, _, lbl in FINAL_MODELS:
+        v = summ[t]
+        L.append(f"| {lbl} | {v['S_recall_all']:.3f} | {v['S_recall_232_only']:.3f} | {v['S_recall_without_232']:.3f} |")
+    with open(os.path.join(RESULTS, 'final', 'comparison_final.md'), 'w') as fh:
+        fh.write('\n'.join(L) + '\n')
+    print('\n'.join(L))
+    return fin, itr, ci_f, ci_i, sel
+
+
+def final_figures(fin, itr, ci_f, ci_i, sel):
+    labels = [l for _, _, l in FINAL_MODELS]
+    # 1. interim vs final macro-F1 with patient-bootstrap CIs
+    fig, ax = plt.subplots(figsize=(5.6, 2.4))
+    for k, (t, it, lbl) in enumerate(FINAL_MODELS):
+        for dx, (val, ci, color, name) in zip(
+                (-0.18, 0.0, 0.18),
+                [(itr[t]['macro_f1']['mean'], ci_i[it]['macro_f1']['ci95'], INK2, 'interim'),
+                 (fin[t]['raw']['macro_f1']['mean'], ci_f[t]['raw']['macro_f1']['ci95'], COLORS[0], 'final raw'),
+                 (fin[t]['calibrated']['macro_f1']['mean'], ci_f[t]['calibrated']['macro_f1']['ci95'],
+                  COLORS[1], 'final calibrated')]):
+            ax.errorbar(k + dx, val, yerr=[[val - ci[0]], [ci[1] - val]], fmt='o', ms=5, color=color,
+                        ecolor=color, elinewidth=1.4, capsize=3, label=name if k == 0 else None)
+    ax.set_xticks(range(4), labels)
+    ax.set_ylabel('DS2 macro-F1 (5 classes)')
+    ax.yaxis.grid(True, color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    ax.legend(ncol=3, frameon=False, fontsize=7.5, loc='lower center', bbox_to_anchor=(0.5, 1.0))
+    fig.savefig(os.path.join(FIGS, 'final_vs_interim.png'))
+    plt.close(fig)
+    # 2. CV ablation steps
+    fig, axes = plt.subplots(1, 4, figsize=(7.2, 2.2), sharey=True)
+    for ax, (t, _, lbl), color in zip(axes, FINAL_MODELS, COLORS):
+        log = sel[t]['ablation_log']
+        vals = [l['cv_macro_f1_nsvf'] for l in log]
+        ax.bar(range(len(log)), vals, color=[color if l['kept'] else '#c9c8c3' for l in log],
+               edgecolor='white', linewidth=0.6)
+        ax.set_xticks(range(len(log)), [l['step'].replace('baseline', 'base') for l in log],
+                      rotation=45, ha='right', fontsize=7)
+        ax.set_title(lbl, fontsize=8)
+        ax.set_ylim(0.38, 0.55)
+        ax.yaxis.grid(True, color=GRID, lw=0.6)
+        ax.set_axisbelow(True)
+    axes[0].set_ylabel('CV macro-F1 (N/S/V/F)')
+    fig.tight_layout()
+    fig.savefig(os.path.join(FIGS, 'final_cv_ablation.png'))
+    plt.close(fig)
+    # 3. confusion matrices of the final calibrated models
+    fig, axes = plt.subplots(1, 4, figsize=(7.0, 2.1))
+    for ax, (t, _, lbl) in zip(axes, FINAL_MODELS):
+        cm = np.array(fin[t]['calibrated']['confusion_matrix_sum'], dtype=float)
+        norm = cm / np.maximum(cm.sum(axis=1, keepdims=True), 1)
+        ax.imshow(norm, cmap='Blues', vmin=0, vmax=1)
+        for i in range(5):
+            for j in range(5):
+                ax.text(j, i, f'{norm[i, j]:.2f}', ha='center', va='center', fontsize=6,
+                        color='white' if norm[i, j] > 0.55 else INK)
+        ax.set_xticks(range(5), CLASSES)
+        ax.set_yticks(range(5), CLASSES)
+        ax.set_title(lbl, fontsize=8)
+        ax.set_xlabel('predicted', fontsize=7)
+        ax.tick_params(length=0, labelsize=7)
+        for s_ in ax.spines.values():
+            s_.set_visible(False)
+    axes[0].set_ylabel('true', fontsize=7)
+    fig.tight_layout()
+    fig.savefig(os.path.join(FIGS, 'final_confusion_matrices.png'))
+    plt.close(fig)
+
+
+if __name__ == '__main__' and '--final' in sys.argv:
+    os.makedirs(FIGS, exist_ok=True)
+    final_figures(*final_tables())
+    print('final figures written')

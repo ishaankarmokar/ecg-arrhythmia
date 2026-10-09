@@ -1,0 +1,37 @@
+{
+  "tag": "m1_random_forest",
+  "variant": "baseline+relRR+smote",
+  "config": {
+    "rel_rr": true,
+    "smote": true
+  },
+  "epochs": null,
+  "cv_macro_f1_nsvf": 0.4642434215305353,
+  "offsets": [
+    0.0,
+    0.75,
+    0.0,
+    1.25,
+    0.0
+  ],
+  "cv_macro_f1_nsvf_calibrated_oof": 0.4963455437180691,
+  "ablation_log": [
+    {
+      "step": "baseline",
+      "cv_macro_f1_nsvf": 0.42933907720056574,
+      "kept": true
+    },
+    {
+      "step": "relRR",
+      "variant": "baseline+relRR",
+      "cv_macro_f1_nsvf": 0.44125962664611973,
+      "kept": true
+    },
+    {
+      "step": "smote",
+      "variant": "baseline+relRR+smote",
+      "cv_macro_f1_nsvf": 0.4642434215305353,
+      "kept": true
+    }
+  ]
+}

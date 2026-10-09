@@ -106,6 +106,49 @@ def bootstrap():
         json.dump(out, fh, indent=2)
 
 
+def bootstrap_final():
+    """Same patient-level bootstrap for the final-phase models, using the CPU
+    re-scored DS2 probabilities (results/final/runs/*_probs_cpu.npz), both raw
+    (argmax) and with the calibration offsets fitted on DS1 cross-validation."""
+    from calibrate import apply as apply_offsets
+    final = os.path.join(ROOT, 'results', 'final')
+    t = np.load(os.path.join(PRED, 'ds2_truth.npz'))
+    y, rec = t['y'].astype(np.int64), t['rec']
+    records = np.unique(rec)
+    idx_of = {r: np.flatnonzero(rec == r) for r in records}
+    rng = np.random.default_rng(RANDOM_SEED)
+    draws = [np.concatenate([idx_of[r] for r in rng.choice(records, len(records))])
+             for _ in range(N_BOOT)]
+    out = {'n_boot': N_BOOT, 'unit': 'DS2 record (patient)', 'models': {}}
+    for tag in ['m1_random_forest', 'm2_cnn1d', 'm3_bigru', 'm4_transformer']:
+        with open(os.path.join(final, tag, 'selected.json')) as fh:
+            offsets = json.load(fh)['offsets']
+        probs = [np.load(os.path.join(final, 'runs', f'{tag}_seed{s}_probs_cpu.npz'))['p']
+                 for s in SEEDS]
+        out['models'][tag] = {}
+        for kind in ['raw', 'calibrated']:
+            preds = [p.argmax(1) if kind == 'raw' else apply_offsets(p, offsets) for p in probs]
+            point = {k: float(np.mean([fast_f1(y, q)[k] for q in preds]))
+                     for k in ['macro_f1', 'macro_f1_nsvf']}
+            boots = {'macro_f1': [], 'macro_f1_nsvf': []}
+            for ix in draws:
+                ms = [fast_f1(y[ix], q[ix]) for q in preds]
+                for k in boots:
+                    boots[k].append(np.mean([m[k] for m in ms]))
+            out['models'][tag][kind] = {k: {'point': point[k],
+                                            'ci95': [float(np.percentile(boots[k], 2.5)),
+                                                     float(np.percentile(boots[k], 97.5))]}
+                                        for k in boots}
+            r = out['models'][tag][kind]['macro_f1']
+            print(f"{tag:18s} {kind:10s} macro-F1 {r['point']:.3f}  95% CI "
+                  f"[{r['ci95'][0]:.3f}, {r['ci95'][1]:.3f}]", flush=True)
+    with open(os.path.join(final, 'bootstrap_ci_final.json'), 'w') as fh:
+        json.dump(out, fh, indent=2)
+
+
 if __name__ == '__main__':
-    export_predictions()
-    bootstrap()
+    if '--final' in sys.argv:
+        bootstrap_final()
+    else:
+        export_predictions()
+        bootstrap()
