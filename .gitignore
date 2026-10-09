@@ -13,3 +13,6 @@ logs/
 results/_superseded/
 # Third-party papers are not redistributed; see literature/README.md
 literature/*.pdf
+# Smoke-test outputs (ECG_SMOKE=1)
+results/_smoke/
+saved_models/_smoke/

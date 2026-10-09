@@ -1,0 +1,46 @@
+{
+  "tag": "m3_bigru",
+  "variant": "baseline",
+  "config": {
+    "lr": 0.001,
+    "pool": 3,
+    "units": 32,
+    "dropout": 0.3,
+    "dense": 64
+  },
+  "epochs": 8,
+  "cv_macro_f1_nsvf": 0.44399858914944224,
+  "offsets": [
+    0.0,
+    0.75,
+    -0.5,
+    -1.0,
+    0.0
+  ],
+  "cv_macro_f1_nsvf_calibrated_oof": 0.4514787612062366,
+  "ablation_log": [
+    {
+      "step": "baseline",
+      "cv_macro_f1_nsvf": 0.44399858914944224,
+      "kept": true
+    },
+    {
+      "step": "context",
+      "variant": "baseline+context",
+      "cv_macro_f1_nsvf": 0.44250596873974546,
+      "kept": false
+    },
+    {
+      "step": "augment",
+      "variant": "baseline+augment",
+      "cv_macro_f1_nsvf": 0.45019773092114096,
+      "kept": false
+    },
+    {
+      "step": "focal",
+      "variant": "baseline+focal",
+      "cv_macro_f1_nsvf": 0.45327722869712583,
+      "kept": false
+    }
+  ]
+}

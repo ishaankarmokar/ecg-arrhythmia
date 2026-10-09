@@ -43,6 +43,9 @@ src/evaluate.py            the one metric implementation every model uses
 src/search.py              Differential Evolution and Particle Swarm Optimisation
 src/compare.py             comparison tables and figures from results/*.json
 src/bootstrap_ci.py        patient-level bootstrap 95% CIs for DS2 macro-F1
+src/cv.py                  final phase: grouped CV, ablations, final training
+src/calibrate.py           final phase: per-class decision offsets fitted on CV
+src/rescore_final.py       final phase: CPU re-scoring of the GPU-trained models
 src/models/m1_random_forest.py
 src/models/m2_cnn1d.py
 src/models/m3_bigru.py
@@ -65,4 +68,28 @@ pip install -r requirements.txt
 every model. On an 8-core laptop CPU the full run takes about 2.5 hours; the
 notebooks re-score the saved weights in a few minutes.
 
-Current DS2 results are in `results/comparison.md`.
+Interim DS2 results are in `results/comparison.md`.
+
+## Final phase
+
+Every decision is made on DS1 with 4-fold grouped (leave-patients-out)
+cross-validation over its 22 patients (`src/cv.py`, folds in `src/config.py`):
+which improvements to keep, the CNN's DE/PSO search, the number of epochs and
+the decision-calibration offsets (`src/calibrate.py`). Final models are then
+trained on all 22 DS1 patients (3 seeds) and DS2 is scored once.
+
+Improvements tested, each kept only if CV macro-F1 rose by at least 0.01:
+
+* multi-beat context input: 3 s around each beat at 120 Hz (`data/processed/context.npz`)
+* training-time augmentation (amplitude, noise, baseline offset, +/-40 ms shift)
+* focal loss instead of plain class-weighted cross-entropy
+* Random Forest: patient-relative RR features and SMOTE
+
+Training ran on a Colab GPU (`notebooks/colab_runner.ipynb`); `src/rescore_final.py`
+re-scores every saved model on CPU so all stored numbers reproduce locally.
+Results: `results/final/comparison_final.md` (interim vs final, patient-level
+bootstrap CIs, per-record error analysis) and `figures/final_*.png`.
+
+```bash
+FINAL_PHASE=1 ./run_all.sh     # full final phase (GPU strongly recommended)
+```

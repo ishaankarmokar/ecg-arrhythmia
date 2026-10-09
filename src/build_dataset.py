@@ -22,7 +22,17 @@ RR features matter: a supraventricular (S) beat is defined largely by its
     F[:,2] local-RR   mean of the 10 preceding RR intervals
     F[:,3] ratio      pre-RR / local-RR   (<1 means the beat came early)
 
-Run once. Every model loads this file; nobody re-segments.
+Final phase: also writes data/processed/context.npz, row-aligned with
+beats.npz (beats.npz itself is unchanged, so interim results stay
+reproducible):
+    Xc    (n, 360) float16 -- 3 s centred on the R peak (the beat and its
+                              neighbours), decimated to 120 Hz, z-scored
+    Frel  (n, 4)   float32 -- patient-relative RR features:
+                              pre-RR, post-RR and local-RR divided by the mean
+                              RR of the previous 5 minutes (past beats only, no
+                              labels), plus pre-RR / local-RR
+
+Run once. Every model loads these files; nobody re-segments.
 """
 import os, sys, collections
 import numpy as np
@@ -33,11 +43,13 @@ from scipy.signal import butter, filtfilt
 sys.path.insert(0, os.path.dirname(__file__))
 from config import (DS1, DS2, DS1_VAL, DS1_TRAIN, AAMI, CLASSES, CLASS_TO_IDX,
                     LEAD, PRE, POST, FS, BASELINE_MED_MS, LOWPASS_HZ,
-                    LOWPASS_ORDER)
+                    LOWPASS_ORDER, CTX_PRE, CTX_POST, CTX_DECIMATE,
+                    LONG_RR_SECONDS)
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(HERE, 'data', 'raw')
 OUT = os.path.join(HERE, 'data', 'processed', 'beats.npz')
+OUT_CTX = os.path.join(HERE, 'data', 'processed', 'context.npz')
 
 
 def lead_index(header):
@@ -66,6 +78,26 @@ def clean(x, fs=FS):
     return filtfilt(b, a, y).astype(np.float32)
 
 
+def context_window(x, pos):
+    """3 s around the R peak, edge-padded at record boundaries, decimated to
+    120 Hz and z-scored. Returns 360 samples."""
+    a, b = pos - CTX_PRE, pos + CTX_POST
+    seg = x[max(a, 0):min(b, len(x))]
+    seg = np.pad(seg, (max(0, -a), max(0, b - len(x))), mode='edge')
+    seg = seg[::CTX_DECIMATE]
+    sd = seg.std()
+    return ((seg - seg.mean()) / (sd if sd > 1e-6 else 1.0)).astype(np.float16)
+
+
+def relative_rr(samples, i, feats):
+    """RR features divided by the patient's mean RR over the previous
+    LONG_RR_SECONDS (causal: only beats before beat i are used)."""
+    pos = samples[i]
+    lo = np.searchsorted(samples, pos - LONG_RR_SECONDS * FS)
+    long = np.diff(samples[lo:i + 1]).mean() / FS if i - lo >= 2 else feats[0]
+    return [feats[0] / long, feats[1] / long, feats[2] / long, feats[3]]
+
+
 def split_of(rec):
     if rec in DS1_TRAIN: return 'train'
     if rec in DS1_VAL:   return 'val'
@@ -86,6 +118,7 @@ def rr_features(samples, i):
 
 def main():
     X, F, y, R, S = [], [], [], [], []
+    XC, FR = [], []
     skipped_edge = 0
     skipped_lbl = collections.Counter()
 
@@ -117,6 +150,7 @@ def main():
             sd = beat.std()
             beat = (beat - beat.mean()) / (sd if sd > 1e-6 else 1.0)
             X.append(beat); F.append(feats); y.append(CLASS_TO_IDX[cls])
+            XC.append(context_window(x, pos)); FR.append(relative_rr(samples, i, feats))
             R.append(rec); S.append(sp)
             kept += 1
         print(f'  {rec} [{sp:5s}] ch={ch} kept {kept:5d} beats', flush=True)
@@ -128,6 +162,9 @@ def main():
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     np.savez_compressed(OUT, X=X, F=F, y=y, rec=R, split=S)
+    np.savez_compressed(OUT_CTX, Xc=np.asarray(XC, dtype=np.float16),
+                        Frel=np.asarray(FR, dtype=np.float32))
+    print(f'context windows {np.shape(XC)} -> {OUT_CTX}')
 
     print(f'\nX {X.shape}  F {F.shape}  ->  {OUT}')
     print(f'dropped {skipped_edge} beats at record boundaries / without RR context')

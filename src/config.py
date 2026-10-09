@@ -31,6 +31,19 @@ DS1_TRAIN = [r for r in DS1 if r not in DS1_VAL]
 # over N/S/V/F. Final reporting still includes all five synopsis classes.
 SEARCH_CLASSES = ['N', 'S', 'V', 'F']
 
+# --- Final phase: 4-fold grouped cross-validation over all of DS1 ------------
+# Every DS1 record is in exactly one fold. Folds are hand-balanced so each holds
+# a share of the S and V beats (S sits mostly in 209, 201, 207, 118, 220, 223).
+# F cannot be balanced: 372 of DS1's 414 F beats are in record 208, so per-fold
+# F scores are reported as unstable. DS2 is never part of any fold.
+CV_FOLDS = [
+    ['209', '106', '115', '112', '101', '108'],
+    ['201', '207', '119', '122', '230', '114'],
+    ['118', '223', '203', '124', '116'],
+    ['208', '215', '205', '109', '220'],
+]
+assert sorted(sum(CV_FOLDS, [])) == sorted(DS1), 'CV folds must partition DS1'
+
 # --- AAMI EC57 class mapping ------------------------------------------------
 AAMI = {
     'N': 'N', 'L': 'N', 'R': 'N', 'e': 'N', 'j': 'N',   # normal / bundle branch
@@ -60,6 +73,20 @@ WINDOW = PRE + POST      # 360 samples = 1.000 s per beat
 BASELINE_MED_MS = (200, 600)
 LOWPASS_HZ = 35.0
 LOWPASS_ORDER = 4
+
+# Multi-beat context window (final phase): 3 s centred on the R peak, i.e. the
+# beat plus its neighbours, decimated 3x to 120 Hz (safe after the 35 Hz
+# low-pass). 3 s x 120 Hz = 360 samples, the same length as the beat window.
+CTX_PRE = CTX_POST = 540          # samples at 360 Hz (1.5 s each side)
+CTX_DECIMATE = 3
+CTX_FS = FS // CTX_DECIMATE       # 120 Hz
+# Patient-relative RR features use the mean RR over the previous 5 minutes.
+LONG_RR_SECONDS = 300
+
+# ECG_SMOKE=1 runs every final-phase stage on a tiny subset with 2 epochs and
+# writes to results/_smoke/, to test the pipeline before a long GPU run.
+import os as _os
+SMOKE = _os.environ.get('ECG_SMOKE') == '1'
 
 RANDOM_SEED = 42
 # Every model is trained once per seed; reports give mean +/- std.
