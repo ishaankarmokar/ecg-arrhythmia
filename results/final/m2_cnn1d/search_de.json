@@ -1,0 +1,206 @@
+{
+  "optimizer": "de",
+  "agents": 5,
+  "iterations": 2,
+  "flags": {
+    "augment": true
+  },
+  "budget_evals": 15,
+  "search_epochs": 12,
+  "best_config": {
+    "lr": 0.00124,
+    "filters": 16,
+    "kernel": 7,
+    "blocks": 2,
+    "dropout": 0.1,
+    "dense": 32
+  },
+  "best_cv_macro_f1_nsvf": 0.5108701121018812,
+  "history_best_objective": [
+    0.5050361910025525,
+    0.5038230555474932,
+    0.48912988789811884
+  ],
+  "evaluations": [
+    {
+      "eval": 1,
+      "config": {
+        "lr": 0.00163,
+        "filters": 24,
+        "kernel": 15,
+        "blocks": 4,
+        "dropout": 0.1377,
+        "dense": 128
+      },
+      "objective": 0.5231991572912422
+    },
+    {
+      "eval": 2,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 5,
+        "blocks": 3,
+        "dropout": 0.2483,
+        "dense": 128
+      },
+      "objective": 0.5228500142521348
+    },
+    {
+      "eval": 3,
+      "config": {
+        "lr": 0.00114,
+        "filters": 48,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3218,
+        "dense": 32
+      },
+      "objective": 0.5254031163682982
+    },
+    {
+      "eval": 4,
+      "config": {
+        "lr": 0.00188,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.4883,
+        "dense": 128
+      },
+      "objective": 0.5128341480080529
+    },
+    {
+      "eval": 5,
+      "config": {
+        "lr": 0.00165,
+        "filters": 16,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.1617,
+        "dense": 128
+      },
+      "objective": 0.5050361910025525
+    },
+    {
+      "eval": 6,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.5,
+        "dense": 64
+      },
+      "objective": 0.5481156227306465
+    },
+    {
+      "eval": 7,
+      "config": {
+        "lr": 0.00128,
+        "filters": 24,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 32
+      },
+      "objective": 0.5061191228234627
+    },
+    {
+      "eval": 8,
+      "config": {
+        "lr": 0.00177,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.337,
+        "dense": 64
+      },
+      "objective": 0.5038230555474932
+    },
+    {
+      "eval": 9,
+      "config": {
+        "lr": 0.00116,
+        "filters": 32,
+        "kernel": 15,
+        "blocks": 3,
+        "dropout": 0.2665,
+        "dense": 32
+      },
+      "objective": 0.5112559475860663
+    },
+    {
+      "eval": 10,
+      "config": {
+        "lr": 0.00185,
+        "filters": 48,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.5,
+        "dense": 128
+      },
+      "objective": 0.5108492926505279
+    },
+    {
+      "eval": 11,
+      "config": {
+        "lr": 0.00124,
+        "filters": 16,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 32
+      },
+      "objective": 0.48912988789811884
+    },
+    {
+      "eval": 12,
+      "config": {
+        "lr": 0.00139,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.2261,
+        "dense": 32
+      },
+      "objective": 0.5327309808864521
+    },
+    {
+      "eval": 13,
+      "config": {
+        "lr": 0.00146,
+        "filters": 16,
+        "kernel": 5,
+        "blocks": 2,
+        "dropout": 0.337,
+        "dense": 32
+      },
+      "objective": 0.5111449112141959
+    },
+    {
+      "eval": 14,
+      "config": {
+        "lr": 0.00176,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 2,
+        "dropout": 0.325,
+        "dense": 128
+      },
+      "objective": 0.5197782949153602
+    },
+    {
+      "eval": 15,
+      "config": {
+        "lr": 0.00199,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.3559,
+        "dense": 128
+      },
+      "objective": 0.5289684988745385
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "optimizer": "pso",
+  "agents": 5,
+  "iterations": 2,
+  "flags": {
+    "augment": true
+  },
+  "budget_evals": 15,
+  "search_epochs": 12,
+  "best_config": {
+    "lr": 0.00215,
+    "filters": 24,
+    "kernel": 9,
+    "blocks": 3,
+    "dropout": 0.1434,
+    "dense": 128
+  },
+  "best_cv_macro_f1_nsvf": 0.4996057543664547,
+  "history_best_objective": [
+    0.5050361910025525,
+    0.5003942456335453,
+    0.5003942456335453
+  ],
+  "evaluations": [
+    {
+      "eval": 1,
+      "config": {
+        "lr": 0.00163,
+        "filters": 24,
+        "kernel": 15,
+        "blocks": 4,
+        "dropout": 0.1377,
+        "dense": 128
+      },
+      "objective": 0.5231991572912422
+    },
+    {
+      "eval": 2,
+      "config": {
+        "lr": 0.00157,
+        "filters": 48,
+        "kernel": 5,
+        "blocks": 3,
+        "dropout": 0.2483,
+        "dense": 128
+      },
+      "objective": 0.5228500142521348
+    },
+    {
+      "eval": 3,
+      "config": {
+        "lr": 0.00114,
+        "filters": 48,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3218,
+        "dense": 32
+      },
+      "objective": 0.5254031163682982
+    },
+    {
+      "eval": 4,
+      "config": {
+        "lr": 0.00188,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 3,
+        "dropout": 0.4883,
+        "dense": 128
+      },
+      "objective": 0.5128341480080529
+    },
+    {
+      "eval": 5,
+      "config": {
+        "lr": 0.00165,
+        "filters": 16,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.1617,
+        "dense": 128
+      },
+      "objective": 0.5050361910025525
+    },
+    {
+      "eval": 6,
+      "config": {
+        "lr": 0.00215,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 3,
+        "dropout": 0.1434,
+        "dense": 128
+      },
+      "objective": 0.5003942456335453
+    },
+    {
+      "eval": 7,
+      "config": {
+        "lr": 0.00106,
+        "filters": 32,
+        "kernel": 5,
+        "blocks": 2,
+        "dropout": 0.1283,
+        "dense": 128
+      },
+      "objective": 0.5032746383505543
+    },
+    {
+      "eval": 8,
+      "config": {
+        "lr": 0.00166,
+        "filters": 32,
+        "kernel": 11,
+        "blocks": 2,
+        "dropout": 0.2018,
+        "dense": 32
+      },
+      "objective": 0.5207174327309446
+    },
+    {
+      "eval": 9,
+      "config": {
+        "lr": 0.00227,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3866,
+        "dense": 128
+      },
+      "objective": 0.5155426307487869
+    },
+    {
+      "eval": 10,
+      "config": {
+        "lr": 0.00208,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.1012,
+        "dense": 64
+      },
+      "objective": 0.5042801714218332
+    },
+    {
+      "eval": 11,
+      "config": {
+        "lr": 0.00262,
+        "filters": 24,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1475,
+        "dense": 64
+      },
+      "objective": 0.5030282338767885
+    },
+    {
+      "eval": 12,
+      "config": {
+        "lr": 0.00108,
+        "filters": 24,
+        "kernel": 7,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 64
+      },
+      "objective": 0.502330689272332
+    },
+    {
+      "eval": 13,
+      "config": {
+        "lr": 0.00236,
+        "filters": 24,
+        "kernel": 11,
+        "blocks": 2,
+        "dropout": 0.1,
+        "dense": 64
+      },
+      "objective": 0.5037171607850547
+    },
+    {
+      "eval": 14,
+      "config": {
+        "lr": 0.00203,
+        "filters": 16,
+        "kernel": 9,
+        "blocks": 2,
+        "dropout": 0.3651,
+        "dense": 64
+      },
+      "objective": 0.5069937484845441
+    },
+    {
+      "eval": 15,
+      "config": {
+        "lr": 0.00247,
+        "filters": 24,
+        "kernel": 9,
+        "blocks": 3,
+        "dropout": 0.1153,
+        "dense": 64
+      },
+      "objective": 0.5142809282200882
+    }
+  ]
+}

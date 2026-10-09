@@ -1,0 +1,182 @@
+{
+  "[[\"blocks\", 4], [\"dense\", 128], [\"dropout\", 0.1377], [\"filters\", 24], [\"kernel\", 15], [\"lr\", 0.00163]]": {
+    "config": {
+      "lr": 0.00163,
+      "filters": 24,
+      "kernel": 15,
+      "blocks": 4,
+      "dropout": 0.1377,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.4768008427087578,
+    "best_epoch": 5
+  },
+  "[[\"blocks\", 3], [\"dense\", 128], [\"dropout\", 0.2483], [\"filters\", 48], [\"kernel\", 5], [\"lr\", 0.00157]]": {
+    "config": {
+      "lr": 0.00157,
+      "filters": 48,
+      "kernel": 5,
+      "blocks": 3,
+      "dropout": 0.2483,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.47714998574786516,
+    "best_epoch": 9
+  },
+  "[[\"blocks\", 2], [\"dense\", 32], [\"dropout\", 0.3218], [\"filters\", 48], [\"kernel\", 9], [\"lr\", 0.00114]]": {
+    "config": {
+      "lr": 0.00114,
+      "filters": 48,
+      "kernel": 9,
+      "blocks": 2,
+      "dropout": 0.3218,
+      "dense": 32
+    },
+    "cv_macro_f1_nsvf": 0.47459688363170177,
+    "best_epoch": 8
+  },
+  "[[\"blocks\", 3], [\"dense\", 128], [\"dropout\", 0.4883], [\"filters\", 32], [\"kernel\", 11], [\"lr\", 0.00188]]": {
+    "config": {
+      "lr": 0.00188,
+      "filters": 32,
+      "kernel": 11,
+      "blocks": 3,
+      "dropout": 0.4883,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.487165851991947,
+    "best_epoch": 4
+  },
+  "[[\"blocks\", 2], [\"dense\", 128], [\"dropout\", 0.1617], [\"filters\", 16], [\"kernel\", 9], [\"lr\", 0.00165]]": {
+    "config": {
+      "lr": 0.00165,
+      "filters": 16,
+      "kernel": 9,
+      "blocks": 2,
+      "dropout": 0.1617,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.4949638089974476,
+    "best_epoch": 7
+  },
+  "[[\"blocks\", 3], [\"dense\", 128], [\"dropout\", 0.1434], [\"filters\", 24], [\"kernel\", 9], [\"lr\", 0.00215]]": {
+    "config": {
+      "lr": 0.00215,
+      "filters": 24,
+      "kernel": 9,
+      "blocks": 3,
+      "dropout": 0.1434,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.49960575436645477,
+    "best_epoch": 6
+  },
+  "[[\"blocks\", 2], [\"dense\", 128], [\"dropout\", 0.1283], [\"filters\", 32], [\"kernel\", 5], [\"lr\", 0.00106]]": {
+    "config": {
+      "lr": 0.00106,
+      "filters": 32,
+      "kernel": 5,
+      "blocks": 2,
+      "dropout": 0.1283,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.4967253616494457,
+    "best_epoch": 11
+  },
+  "[[\"blocks\", 2], [\"dense\", 32], [\"dropout\", 0.2018], [\"filters\", 32], [\"kernel\", 11], [\"lr\", 0.00166]]": {
+    "config": {
+      "lr": 0.00166,
+      "filters": 32,
+      "kernel": 11,
+      "blocks": 2,
+      "dropout": 0.2018,
+      "dense": 32
+    },
+    "cv_macro_f1_nsvf": 0.4792825672690554,
+    "best_epoch": 3
+  },
+  "[[\"blocks\", 2], [\"dense\", 128], [\"dropout\", 0.3866], [\"filters\", 24], [\"kernel\", 9], [\"lr\", 0.00227]]": {
+    "config": {
+      "lr": 0.00227,
+      "filters": 24,
+      "kernel": 9,
+      "blocks": 2,
+      "dropout": 0.3866,
+      "dense": 128
+    },
+    "cv_macro_f1_nsvf": 0.484457369251213,
+    "best_epoch": 10
+  },
+  "[[\"blocks\", 2], [\"dense\", 64], [\"dropout\", 0.1012], [\"filters\", 24], [\"kernel\", 9], [\"lr\", 0.00208]]": {
+    "config": {
+      "lr": 0.00208,
+      "filters": 24,
+      "kernel": 9,
+      "blocks": 2,
+      "dropout": 0.1012,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.4957198285781667,
+    "best_epoch": 7
+  },
+  "[[\"blocks\", 2], [\"dense\", 64], [\"dropout\", 0.1475], [\"filters\", 24], [\"kernel\", 7], [\"lr\", 0.00262]]": {
+    "config": {
+      "lr": 0.00262,
+      "filters": 24,
+      "kernel": 7,
+      "blocks": 2,
+      "dropout": 0.1475,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.4969717661232115,
+    "best_epoch": 7
+  },
+  "[[\"blocks\", 2], [\"dense\", 64], [\"dropout\", 0.1], [\"filters\", 24], [\"kernel\", 7], [\"lr\", 0.00108]]": {
+    "config": {
+      "lr": 0.00108,
+      "filters": 24,
+      "kernel": 7,
+      "blocks": 2,
+      "dropout": 0.1,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.49766931072766796,
+    "best_epoch": 7
+  },
+  "[[\"blocks\", 2], [\"dense\", 64], [\"dropout\", 0.1], [\"filters\", 24], [\"kernel\", 11], [\"lr\", 0.00236]]": {
+    "config": {
+      "lr": 0.00236,
+      "filters": 24,
+      "kernel": 11,
+      "blocks": 2,
+      "dropout": 0.1,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.4962828392149453,
+    "best_epoch": 6
+  },
+  "[[\"blocks\", 2], [\"dense\", 64], [\"dropout\", 0.3651], [\"filters\", 16], [\"kernel\", 9], [\"lr\", 0.00203]]": {
+    "config": {
+      "lr": 0.00203,
+      "filters": 16,
+      "kernel": 9,
+      "blocks": 2,
+      "dropout": 0.3651,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.49300625151545585,
+    "best_epoch": 9
+  },
+  "[[\"blocks\", 3], [\"dense\", 64], [\"dropout\", 0.1153], [\"filters\", 24], [\"kernel\", 9], [\"lr\", 0.00247]]": {
+    "config": {
+      "lr": 0.00247,
+      "filters": 24,
+      "kernel": 9,
+      "blocks": 3,
+      "dropout": 0.1153,
+      "dense": 64
+    },
+    "cv_macro_f1_nsvf": 0.48571907177991175,
+    "best_epoch": 3
+  }
+}

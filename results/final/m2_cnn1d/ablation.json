@@ -1,0 +1,38 @@
+{
+  "config": {
+    "lr": 0.001,
+    "filters": 32,
+    "kernel": 7,
+    "blocks": 3,
+    "dropout": 0.3,
+    "dense": 64,
+    "augment": true
+  },
+  "variant": "baseline+augment",
+  "cv_macro_f1_nsvf": 0.5168256273172123,
+  "log": [
+    {
+      "step": "baseline",
+      "cv_macro_f1_nsvf": 0.459327783865934,
+      "kept": true
+    },
+    {
+      "step": "context",
+      "variant": "baseline+context",
+      "cv_macro_f1_nsvf": 0.44028938424120134,
+      "kept": false
+    },
+    {
+      "step": "augment",
+      "variant": "baseline+augment",
+      "cv_macro_f1_nsvf": 0.5168256273172123,
+      "kept": true
+    },
+    {
+      "step": "focal",
+      "variant": "baseline+augment+focal",
+      "cv_macro_f1_nsvf": 0.5080734184494822,
+      "kept": false
+    }
+  ]
+}
